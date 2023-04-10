@@ -18,7 +18,7 @@ from datetime import datetime
 import time
 import heapq
 
-from AOA_v2 import AOA
+from AOA_fw import AOA
 from LeastQ_v1 import least_square
 from hsv_fw import hsv
 
