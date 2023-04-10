@@ -4,15 +4,12 @@ import math
 import numpy as np
 import rospy
 from pandas import DataFrame
-from mavros_msgs.msg import State
-from sensor_msgs.msg import Imu, NavSatFix
-from geometry_msgs.msg import PoseWithCovarianceStamped
-from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Odometry
-from darknet_ros_msgs.msg import BoundingBoxes
-from mavros_msgs.msg import PositionTarget
-from mavros_msgs.srv import SetMode
-from mavros_msgs.srv import ParamSet
+from mavros_msgs.msg import PositionTarget, State
+from sensor_msgs.msg import Imu, NavSatFix
+from geometry_msgs.msg import PoseWithCovarianceStamped, PoseStamped
+from mavros_msgs.srv import SetMode, ParamSet
+
 from math import *
 from datetime import datetime
 import time
