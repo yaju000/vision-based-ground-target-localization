@@ -10,18 +10,26 @@ timeF = 10
 
 while(True):
     ret, frame = cap.read()
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    # mask 1
+    mask_half = np.zeros([frame.shape[0], frame.shape[1]], dtype=np.uint8)
+    mask_half[300:720,0:1280] = 255
+    frame_1 = cv2.bitwise_and(frame, frame, mask = mask_half)
 
-    lower_white = np.array([0,0,130])
-    upper_white = np.array([180,90,255])
+    # mask 2
+    hsv = cv2.cvtColor(frame_1, cv2.COLOR_BGR2HSV)
+    # lower_white = np.array([0,0,130])
+    # upper_white = np.array([180,90,255])
+    lower_white = np.array([90,10,212])
+    upper_white = np.array([131,255,255])
     r_lower = np.array([140, 60, 130])
     r_upper = np.array([190, 140, 255])
 
-    r_mask = cv2.inRange(hsv, r_lower, r_upper)
+    r_mask = cv2.inRange(hsv, lower_white, upper_white)
 
     kernal = np.ones((25, 25), "uint8")
     r_mask = cv2.dilate(r_mask, kernal)
-    res = cv2.bitwise_and(frame, frame, mask =r_mask)
+
+    frame_2 = cv2.bitwise_and(frame_1, frame_1, mask =r_mask)
 
     #cv2.namedWindow('frame', cv2.WINDOW_KEEPRATIO)
     #cv2.namedWindow('mask', cv2.WINDOW_KEEPRATIO)
@@ -32,7 +40,7 @@ while(True):
     for pic, contour in enumerate(contours):
 
         area = cv2.contourArea(contour)
-        if area > 10:
+        if 1000> area > 10:
             x, y, w, h = cv2.boundingRect(contour)
             frame = cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
             p = x + (w//2)
