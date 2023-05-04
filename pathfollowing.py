@@ -280,36 +280,58 @@ class aoa_info(object):
             vtp_1, vtp_2 = self.insec(p, r_optimal, est, r_optimal)
         else:
             pass
-        
+        #################### Method 1 #############################
         # uav_to_vtp_1 = np.arctan2(vtp_1[0]-p[0], vtp_1[1]-p[1]) #NED
         # uav_to_vtp_2 = np.arctan2(vtp_2[0]-p[0], vtp_2[1]-p[1]) 
-        uav_to_vtp_1 = np.arctan2(vtp_1[1]-p[1], vtp_1[0]-p[0]) #ENU
-        uav_to_vtp_2 = np.arctan2(vtp_2[1]-p[1], vtp_2[0]-p[0]) 
-        # print('----------------------')
-        # print('uav_to_vtp_1, uav_to_vtp_2 = ')
-        # print(uav_to_vtp_1, uav_to_vtp_2)
-        # print('self.heading = ')
-        # print(self.heading)
+#         uav_to_vtp_1 = np.arctan2(vtp_1[1]-p[1], vtp_1[0]-p[0]) #ENU
+#         uav_to_vtp_2 = np.arctan2(vtp_2[1]-p[1], vtp_2[0]-p[0]) 
+#         # print('----------------------')
+#         # print('uav_to_vtp_1, uav_to_vtp_2 = ')
+#         # print(uav_to_vtp_1, uav_to_vtp_2)
+#         # print('self.heading = ')
+#         # print(self.heading)
 
-        angle_1 = self.heading - uav_to_vtp_1
-        angle_2 = self.heading - uav_to_vtp_2 
-        # print('angle_1, angle_2 = ')
-        # print(angle_1, angle_2)
+#         angle_1 = self.heading - uav_to_vtp_1
+#         angle_2 = self.heading - uav_to_vtp_2 
+#         # print('angle_1, angle_2 = ')
+#         # print(angle_1, angle_2)
 
-        if self.heading > 0:
-            if np.abs(angle_1) < np.abs(angle_2):
-                vtp_n = vtp_1[1]
-                vtp_e = vtp_1[0]
-            else:
-                vtp_n = vtp_2[1]
-                vtp_e = vtp_2[0]
-        else:
-            if angle_1 > angle_2:
-                vtp_n = vtp_1[1]
-                vtp_e = vtp_1[0]
-            else:
-                vtp_n = vtp_2[1]
-                vtp_e = vtp_2[0]
+#         if self.heading > 0:
+#             if np.abs(angle_1) < np.abs(angle_2):
+#                 vtp_n = vtp_1[1]
+#                 vtp_e = vtp_1[0]
+#             else:
+#                 vtp_n = vtp_2[1]
+#                 vtp_e = vtp_2[0]
+#         else:
+#             if angle_1 > angle_2:
+#                 vtp_n = vtp_1[1]
+#                 vtp_e = vtp_1[0]
+#             else:
+#                 vtp_n = vtp_2[1]
+#                 vtp_e = vtp_2[0]
+                
+        #################  Method 2 ######################
+        hd_point = [p[0]+np.cos(self.heading), p[1]+sin(self.heading)]
+        L_0 = [hd_point[0]-p[0], hd_point[1]-p[1]]
+        L_1 = [vtp_1[0]-p[0], vtp_1[1]-p[1]]
+        L_2 = [vtp_2[0]-p[0], vtp_2[1]-p[1]]
+
+        cos_1 = np.dot(L_0, L_1)
+        cos_2 = np.dot(L_0, L_2)
+
+        print('----------------------')
+        print('cos_1 =', cos_1)
+        print('cos_2 =', cos_2)
+        print('----------------------')
+
+        if cos_1 > cos_2 :
+            vtp_n = vtp_1[1]
+            vtp_e = vtp_1[0]
+
+        elif cos_1 < cos_2 :
+            vtp_n = vtp_2[1]
+            vtp_e = vtp_2[0]
         print('----------------------')
         print('vtp_e, vtp_n = ')
         print(vtp_e, vtp_n)
