@@ -1,21 +1,23 @@
 import math
 import numpy as np
 
+# With Gimbal
+
 class AOA:
     def AOA_v0(self, x, y, z, phi, theta, psi, P_img_x, P_img_y, P_img_z):
 
         ##### Coordinate Transfermation #####
         # step 1 : body frame to camera
         ## YAW turn right 90 degree
-        # b2c = [[1, 0, 0],[0, 0, -1],[0, 1, 0]]
+        B2C1 = [[1, 0, 0],[0, 0, -1],[0, 1, 0]]
         ## Gimbal attitude (tilt,pan,roll)
-        roll,tilt,pan = -10*np.pi/180, 90*np.pi/180, 0
+        roll,tilt,pan = -10*np.pi/180+phi, 0, 0
         C_x = [[1, 0, 0],[0, np.cos(roll), -np.sin(roll)],[0, np.sin(roll), np.cos(roll)]]
         C_y = [[np.cos(tilt), 0, -np.sin(tilt)], [0, 1, 0], [np.sin(tilt), 0, np.cos(tilt)]]
         C_z = [[np.cos(pan), -np.sin(pan), 0], [np.sin(pan), np.cos(pan), 0], [0, 0, 1]]
         C_1 = np.matmul(C_y,C_z)
-        B2C = np.matmul(C_x, C_1)
-        C2B = B2W = np.linalg.inv(B2C)
+        C12C = np.matmul(C_x, C_1)
+        B2C = np.matmul(C12C, B2C1)
         
         #step 2 : world coordinate to body frame
         ## uav attitude (ned)
